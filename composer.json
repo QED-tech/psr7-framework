@@ -1,0 +1,17 @@
+{
+  "name": "qed/psr7-framework",
+  "autoload": {
+    "psr-4": {
+      "Framework\\": "src/Framework/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Vladislav",
+      "email": "qedirast@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">= 8.0"
+  }
+}
