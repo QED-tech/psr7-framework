@@ -16,5 +16,8 @@
   },
   "require": {
     "php": ">= 8.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
   }
 }
