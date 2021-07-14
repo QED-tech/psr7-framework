@@ -11,6 +11,9 @@
       "email": "qedirast@gmail.com"
     }
   ],
+  "config": {
+    "sort-packages": true
+  },
   "require": {
     "php": ">= 8.0"
   }
