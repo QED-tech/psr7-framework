@@ -5,7 +5,10 @@ use Framework\Http\Request;
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$request = new Request();
-$post = $request->getParsedBody();
+$request = (new Request())
+	->withParsedBody($_POST)
+	->withQueryParams($_GET);
 
-print_r($post);
+$get = $request->getQueryParams();
+
+print_r($get);

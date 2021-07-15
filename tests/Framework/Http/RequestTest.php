@@ -7,12 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
-	protected function setUp(): void
-	{
-		$_POST = [];
-		$_GET = [];
-	}
-	
 	public function testEmpty()
 	{
 		$request = new Request();
@@ -23,13 +17,25 @@ class RequestTest extends TestCase
 	
 	public function testQueryParams()
 	{
-		$_GET = $data = [
+		$data = [
 			'data' => 'for tests'
 		];
 		
-		$request = new Request();
+		$request = (new Request())
+			->withQueryParams($data);
 		
 		$this->assertEquals($data, $request->getQueryParams());
 		$this->assertEmpty($request->getParsedBody());
+	}
+	
+	public function testParsedBody()
+	{
+		$request = (new Request())
+			->withParsedBody($data = [
+				'data' => 'for tests body'
+			]);
+		
+		$this->assertEquals($data, $request->getParsedBody());
+		$this->assertEmpty($request->getQueryParams());
 	}
 }
