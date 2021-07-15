@@ -17,12 +17,10 @@ class RequestTest extends TestCase
 	
 	public function testQueryParams()
 	{
-		$data = [
-			'data' => 'for tests'
-		];
-		
 		$request = (new Request())
-			->withQueryParams($data);
+			->withQueryParams($data = [
+				'data' => 'for tests'
+			]);
 		
 		$this->assertEquals($data, $request->getQueryParams());
 		$this->assertEmpty($request->getParsedBody());
