@@ -2,7 +2,8 @@
   "name": "qed/psr7-framework",
   "autoload": {
     "psr-4": {
-      "Framework\\": "src/Framework/"
+      "Framework\\": "src/Framework/",
+      "Tests\\": "tests/"
     }
   },
   "authors": [

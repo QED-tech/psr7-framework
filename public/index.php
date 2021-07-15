@@ -6,6 +6,6 @@ chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
 $request = new Request();
-$get = $request->getQueryParams();
+$post = $request->getParsedBody();
 
-print_r($get);
+print_r($post);
