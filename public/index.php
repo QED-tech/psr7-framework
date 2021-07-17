@@ -1,15 +1,34 @@
 <?php
 
 
-use Framework\Http\RequestFactory;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\ServerRequestFactory;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$request = RequestFactory::fromGlobals();
+### Initialization
 
-$get = $request->getQueryParams();
+$request = ServerRequestFactory::fromGlobals();
 
-$name = $get['name'] ?? 'Guest';
+### Action
 
-echo "Hello, $name";
+$name = $request->getQueryParams()['name'] ?? 'Guest';
+
+$response = (new HtmlResponse('Hello, ' . $name . '!'))
+	->withHeader('X-Developer', 'QED-tech');
+
+### Sending
+
+header(sprintf(
+	'HTTP/%s %d %s',
+	$response->getProtocolVersion(),
+	$response->getStatusCode(),
+	$response->getReasonPhrase()
+));
+foreach ($response->getHeaders() as $name => $values) {
+	foreach ($values as $value) {
+		header(sprintf('%s: %s', $name, $value), false);
+	}
+}
+echo $response->getBody();

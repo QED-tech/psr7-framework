@@ -1,4 +1,4 @@
-/vendor
-/.idea
+/vendor/
+/.idea/
 /phpunit.xml.dist.bak
 /.phpunit.result.cache
