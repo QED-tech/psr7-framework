@@ -9,7 +9,9 @@ class RequestTest extends TestCase
 {
 	public function testEmpty()
 	{
-		$request = new Request();
+		$request = (new Request())
+			->withParsedBody([])
+			->withQueryParams([]);
 		
 		$this->assertEmpty($request->getParsedBody());
 		$this->assertEmpty($request->getQueryParams());
@@ -17,10 +19,12 @@ class RequestTest extends TestCase
 	
 	public function testQueryParams()
 	{
+		$data = [
+			'data' => 'for tests'
+		];
 		$request = (new Request())
-			->withQueryParams($data = [
-				'data' => 'for tests'
-			]);
+			->withQueryParams($data)
+			->withParsedBody([]);
 		
 		$this->assertEquals($data, $request->getQueryParams());
 		$this->assertEmpty($request->getParsedBody());
@@ -28,10 +32,12 @@ class RequestTest extends TestCase
 	
 	public function testParsedBody()
 	{
+		$data = [
+			'data' => 'for tests body'
+		];
 		$request = (new Request())
-			->withParsedBody($data = [
-				'data' => 'for tests body'
-			]);
+			->withParsedBody($data)
+			->withQueryParams([]);
 		
 		$this->assertEquals($data, $request->getParsedBody());
 		$this->assertEmpty($request->getQueryParams());

@@ -1,14 +1,15 @@
 <?php
 
-use Framework\Http\Request;
+
+use Framework\Http\RequestFactory;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$request = (new Request())
-	->withParsedBody($_POST)
-	->withQueryParams($_GET);
+$request = RequestFactory::fromGlobals();
 
 $get = $request->getQueryParams();
 
-print_r($get);
+$name = $get['name'] ?? 'Guest';
+
+echo "Hello, $name";
