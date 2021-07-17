@@ -3,6 +3,7 @@
 
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -20,15 +21,5 @@ $response = (new HtmlResponse('Hello, ' . $name . '!'))
 
 ### Sending
 
-header(sprintf(
-	'HTTP/%s %d %s',
-	$response->getProtocolVersion(),
-	$response->getStatusCode(),
-	$response->getReasonPhrase()
-));
-foreach ($response->getHeaders() as $name => $values) {
-	foreach ($values as $value) {
-		header(sprintf('%s: %s', $name, $value), false);
-	}
-}
-echo $response->getBody();
+$emitter = new SapiEmitter();
+$emitter->emit($response);
