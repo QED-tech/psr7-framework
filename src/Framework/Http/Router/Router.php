@@ -5,7 +5,7 @@ namespace Framework\Http\Router;
 use Framework\Http\Router\exception\RequestNotMatchedException;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Router
+class Router implements RouterInterface
 {
 	private RouteCollection $routes;
 	
@@ -15,7 +15,7 @@ class Router
 	}
 	
 	/**
-	 * @throw RequestNotMatchedException
+	 * @throws RequestNotMatchedException
 	 */
 	public function match(ServerRequestInterface $request): Result
 	{
@@ -42,5 +42,10 @@ class Router
 		}
 		
 		throw new RequestNotMatchedException($request);
+	}
+	
+	public function generate($name, array $params): string
+	{
+		//TODO: Implement this method.
 	}
 }
