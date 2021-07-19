@@ -20,10 +20,24 @@ class Router
 	public function match(ServerRequestInterface $request): Result
 	{
 		foreach ($this->routes->getRoutes() as $route) {
-			// method validation
+			if ($route->methods && !in_array($request->getMethod(), $route->methods)) {
+				throw new RequestNotMatchedException($request);
+			}
 			
-			if ($route->name === 'about') {
-				return  new Result($route->name, $route->handler, $route->arguments);
+			$pattern = preg_replace_callback('~{([^}]+)}~', function ($matches) use ($route) {
+				$match = $matches[1];
+				$pattern = $route->arguments[$match] ?? '[^}]+';
+				return '(?' . '<' . $match . '>' . $pattern . ')';
+			}, $route->path);
+			
+			$path = $request->getUri()->getPath();
+			
+			if (preg_match('~^' . $pattern . '$~', $path, $matches)) {
+				return new Result(
+					$route->name,
+					$route->handler,
+					array_filter($matches, '\is_string', ARRAY_FILTER_USE_KEY)
+				);
 			}
 		}
 		

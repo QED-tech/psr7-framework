@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Actions\AboutAction;
 use App\Http\Actions\Blog\BlogShowAction;
 use App\Http\Actions\HomeAction;
