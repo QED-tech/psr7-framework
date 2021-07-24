@@ -47,5 +47,6 @@ class Router implements RouterInterface
 	public function generate($name, array $params): string
 	{
 		//TODO: Implement this method.
+		return '';
 	}
 }
