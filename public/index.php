@@ -4,10 +4,12 @@ use App\Http\Actions\AboutAction;
 use App\Http\Actions\Blog\BlogShowAction;
 use App\Http\Actions\CabinetAction;
 use App\Http\Actions\HomeAction;
+use App\Http\Actions\NotFoundAction;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
+use Framework\Http\Pipelines\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\exception\RequestNotMatchedException;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -35,15 +37,13 @@ $router = new AuraRouterAdapter($aura);
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('cabinet', '/cabinet', function (ServerRequest $request) use ($params) {
-    $auth = new AuthMiddleware($params['users']);
-    $profiler = new ProfilerMiddleware();
-    $cabinet = new CabinetAction();
     
-    return $profiler($request, function (ServerRequest $request) use ($cabinet, $auth) {
-        return $auth($request, function (ServerRequest $request) use ($cabinet) {
-            return $cabinet($request);
-        });
-    });
+    $pipeline = (new Pipeline())
+        ->pipe(new AuthMiddleware($params['users']))
+        ->pipe(new ProfilerMiddleware())
+        ->pipe(new CabinetAction());
+    
+    return $pipeline($request, new NotFoundAction());
 });
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 
@@ -56,7 +56,8 @@ try {
     $action = $actionResolver->resolve($result->getHandler());
     $response = $action($request);
 } catch (RequestNotMatchedException $e) {
-    $response = new JsonResponse(['error' => $e->getMessage()]);
+	$action = NotFoundAction::class;
+	$response = $action($request);
 }
 
 $emitter = new SapiEmitter();
