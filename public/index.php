@@ -34,8 +34,12 @@ $router = new AuraRouterAdapter($aura);
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('cabinet', '/cabinet', function (ServerRequest $request) use ($params) {
-	$middleware =  new AuthMiddleware($params['users']);
-	return $middleware($request, new CabinetAction());
+	$auth =  new AuthMiddleware($params['users']);
+	$cabinet = new CabinetAction();
+	
+	return $auth($request, function (ServerRequest $request) use ($cabinet) {
+		return $cabinet($request);
+	});
 });
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 
