@@ -8,17 +8,17 @@ use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\exception\RequestNotMatchedException;
-use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-### Initialization
+// Initialization
 
 $users = [
-	'users' => ['admin' => 'password']
+    'users' => ['admin' => 'password']
 ];
 
 $actionResolver = new ActionResolver();
@@ -28,24 +28,22 @@ $aura = new RouterContainer();
 $routes = $aura->getMap();
 $router = new AuraRouterAdapter($aura);
 
-## Routes
+// Routes
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('cabinet', '/cabinet', new CabinetAction($users['users']));
-$routes->get('blog.show', '/blog/{id}', BlogShowAction::class)
-	->tokens(['id' => '\d+']);
+$routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 
-## Run
+// Run
 try {
-	$result = $router->match($request);
-	foreach ($result->getAttributes() as $attribute => $value) {
-		$request = $request->withAttribute($attribute, $value);
-	}
-	
-	$action = $actionResolver->resolve($result->getHandler());
-	$response = $action($request);
+    $result = $router->match($request);
+    foreach ($result->getAttributes() as $attribute => $value) {
+        $request = $request->withAttribute($attribute, $value);
+    }
+    $action = $actionResolver->resolve($result->getHandler());
+    $response = $action($request);
 } catch (RequestNotMatchedException $e) {
-	$response = new Response\JsonResponse(['error' => $e->getMessage()]);
+    $response = new JsonResponse(['error' => $e->getMessage()]);
 }
 
 $emitter = new SapiEmitter();
