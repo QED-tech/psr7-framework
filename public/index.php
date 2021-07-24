@@ -5,6 +5,7 @@ use App\Http\Actions\Blog\BlogShowAction;
 use App\Http\Actions\CabinetAction;
 use App\Http\Actions\HomeAction;
 use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -34,12 +35,15 @@ $router = new AuraRouterAdapter($aura);
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('cabinet', '/cabinet', function (ServerRequest $request) use ($params) {
-	$auth =  new AuthMiddleware($params['users']);
-	$cabinet = new CabinetAction();
-	
-	return $auth($request, function (ServerRequest $request) use ($cabinet) {
-		return $cabinet($request);
-	});
+    $auth = new AuthMiddleware($params['users']);
+    $profiler = new ProfilerMiddleware();
+    $cabinet = new CabinetAction();
+    
+    return $profiler($request, function (ServerRequest $request) use ($cabinet, $auth) {
+        return $auth($request, function (ServerRequest $request) use ($cabinet) {
+            return $cabinet($request);
+        });
+    });
 });
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 
