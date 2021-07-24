@@ -10,6 +10,7 @@ use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\exception\RequestNotMatchedException;
 use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -18,7 +19,7 @@ require 'vendor/autoload.php';
 
 // Initialization
 
-$users = [
+$params = [
     'users' => ['admin' => 'pass']
 ];
 
@@ -32,8 +33,8 @@ $router = new AuraRouterAdapter($aura);
 // Routes
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
-$routes->get('cabinet', '/cabinet', function ($request) use ($users) {
-	$middleware =  new AuthMiddleware($users['users']);
+$routes->get('cabinet', '/cabinet', function (ServerRequest $request) use ($params) {
+	$middleware =  new AuthMiddleware($params['users']);
 	return $middleware($request, new CabinetAction());
 });
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
