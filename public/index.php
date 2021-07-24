@@ -3,10 +3,10 @@
 use App\Http\Actions\AboutAction;
 use App\Http\Actions\Blog\BlogShowAction;
 use App\Http\Actions\HomeAction;
+use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
+use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\exception\RequestNotMatchedException;
-use Framework\Http\Router\RouteCollection;
-use Framework\Http\Router\Router;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -17,15 +17,18 @@ require 'vendor/autoload.php';
 ### Initialization
 $actionResolver = new ActionResolver();
 $request = ServerRequestFactory::fromGlobals();
-$collection = new RouteCollection();
+
+$aura = new RouterContainer();
+$routes = $aura->getMap();
+$router = new AuraRouterAdapter($aura);
 
 ## Routes
-$collection->any('home', '/', HomeAction::class);
-$collection->any('about', '/about', AboutAction::class);
-$collection->any('blog.show', '/blog/{id}', BlogShowAction::class, ['id' => '\d+']);
+$routes->get('home', '/', HomeAction::class);
+$routes->get('about', '/about', AboutAction::class);
+$routes->get('blog.show', '/blog/{id}', BlogShowAction::class)
+	->tokens(['id' => '\d+']);
 
 ## Run
-$router = new Router($collection);
 try {
 	$result = $router->match($request);
 	foreach ($result->getAttributes() as $attribute => $value) {
