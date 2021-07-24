@@ -10,12 +10,12 @@ class ProfilerMiddleware
     public function __invoke(ServerRequestInterface $request, callable $next): ResponseInterface
     {
         $start = microtime(true);
-        
+
         /** @var ResponseInterface $response */
         $response = $next($request);
-        
+
         $stop = microtime(true);
-        
+
         return $response->withHeader('X-Profile-Time', $stop - $start);
     }
 }

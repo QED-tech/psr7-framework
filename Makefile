@@ -7,4 +7,4 @@ lint:
 	composer phpcs
 
 lint-fix:
-	phpcbf -- --standard=PSR12 src public tests
+	composer cs-fix

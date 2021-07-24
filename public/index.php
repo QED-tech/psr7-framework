@@ -8,7 +8,7 @@ use App\Http\Actions\NotFoundAction;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
-use Framework\Http\ActionResolver;
+use Framework\Http\MiddlewareResolver;
 use Framework\Http\Pipelines\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\exception\RequestNotMatchedException;
@@ -26,7 +26,7 @@ $params = [
     'users' => ['admin' => 'pass']
 ];
 
-$actionResolver = new ActionResolver();
+$middlewareResolver = new MiddlewareResolver();
 $request = ServerRequestFactory::fromGlobals();
 
 $aura = new RouterContainer();
@@ -53,7 +53,7 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $action = $actionResolver->resolve($result->getHandler());
+    $action = $middlewareResolver->resolve($result->getHandler());
     $response = $action($request);
 } catch (RequestNotMatchedException $e) {
     $action = NotFoundAction::class;

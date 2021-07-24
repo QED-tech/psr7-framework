@@ -14,7 +14,7 @@ interface Router
      * @return Result
      */
     public function match(ServerRequestInterface $request): Result;
-    
+
     /**
      * @param  $name
      * @param  array $params
