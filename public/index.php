@@ -16,6 +16,11 @@ chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
 ### Initialization
+
+$users = [
+	'users' => ['admin' => 'password']
+];
+
 $actionResolver = new ActionResolver();
 $request = ServerRequestFactory::fromGlobals();
 
@@ -26,7 +31,7 @@ $router = new AuraRouterAdapter($aura);
 ## Routes
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
-$routes->get('cabinet', '/cabinet', CabinetAction::class);
+$routes->get('cabinet', '/cabinet', new CabinetAction($users['users']));
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)
 	->tokens(['id' => '\d+']);
 
