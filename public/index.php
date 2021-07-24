@@ -56,8 +56,8 @@ try {
     $action = $actionResolver->resolve($result->getHandler());
     $response = $action($request);
 } catch (RequestNotMatchedException $e) {
-	$action = NotFoundAction::class;
-	$response = $action($request);
+    $action = NotFoundAction::class;
+    $response = $action($request);
 }
 
 $emitter = new SapiEmitter();

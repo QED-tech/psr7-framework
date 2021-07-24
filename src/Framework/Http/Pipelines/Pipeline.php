@@ -2,13 +2,18 @@
 
 namespace Framework\Http\Pipelines;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Pipeline
 {
-    private array $middlewares;
+    private array $middlewares = [];
     
-    public function __invoke(ServerRequestInterface $request, callable $default)
+    public function __invoke(ServerRequestInterface $request, callable $default): ResponseInterface
+    {
+    }
+    
+    private function next(ServerRequestInterface $request, callable $default): ResponseInterface
     {
     }
     
