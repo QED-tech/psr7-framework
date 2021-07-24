@@ -4,6 +4,7 @@ use App\Http\Actions\AboutAction;
 use App\Http\Actions\Blog\BlogShowAction;
 use App\Http\Actions\CabinetAction;
 use App\Http\Actions\HomeAction;
+use App\Http\Middleware\AuthMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -18,7 +19,7 @@ require 'vendor/autoload.php';
 // Initialization
 
 $users = [
-    'users' => ['admin' => 'password']
+    'users' => ['admin' => 'pass']
 ];
 
 $actionResolver = new ActionResolver();
@@ -31,7 +32,10 @@ $router = new AuraRouterAdapter($aura);
 // Routes
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
-$routes->get('cabinet', '/cabinet', new CabinetAction($users['users']));
+$routes->get('cabinet', '/cabinet', function ($request) use ($users) {
+	$middleware =  new AuthMiddleware($users['users']);
+	return $middleware($request, new CabinetAction());
+});
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 
 // Run
