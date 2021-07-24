@@ -22,7 +22,7 @@ class Pipeline
         }
         
         return $current($request, function (ServerRequestInterface $request) use ($default) {
-        	return $this->next($request, $default);
+            return $this->next($request, $default);
         });
     }
     

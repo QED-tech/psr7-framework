@@ -39,8 +39,8 @@ $routes->get('about', '/about', AboutAction::class);
 $routes->get('cabinet', '/cabinet', function (ServerRequest $request) use ($params) {
     
     $pipeline = (new Pipeline())
-        ->pipe(new AuthMiddleware($params['users']))
         ->pipe(new ProfilerMiddleware())
+        ->pipe(new AuthMiddleware($params['users']))
         ->pipe(new CabinetAction());
     
     return $pipeline($request, new NotFoundAction());
