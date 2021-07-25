@@ -4,9 +4,12 @@ namespace App\Http\Middleware;
 
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class AuthMiddleware
+class AuthMiddleware implements MiddlewareInterface
 {
     private array $users;
 
@@ -15,7 +18,7 @@ class AuthMiddleware
         $this->users = $users;
     }
 
-    public function __invoke(ServerRequestInterface $request, callable $next): Response
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $username = $request->getServerParams()['PHP_AUTH_USER'] ?? null;
         $password = $request->getServerParams()['PHP_AUTH_PW'] ?? null;
@@ -23,7 +26,7 @@ class AuthMiddleware
         if ($username !== null && $password !== null) {
             foreach ($this->users as $name => $pass) {
                 if ($name === $username && $pass === $password) {
-                    return $next($request->withAttribute('username', $username));
+                    return $handler->handle($request->withAttribute('username', $username));
                 }
             }
         }

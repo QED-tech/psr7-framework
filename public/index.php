@@ -18,6 +18,7 @@ use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\Stratigility\MiddlewarePipe;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -29,17 +30,14 @@ $params = [
 
 $request = ServerRequestFactory::fromGlobals();
 $resolver = new MiddlewareResolver();
-$app = new Application(
-    $resolver,
-    new NotFoundAction()
-);
+$app = new MiddlewarePipe();
 
 $aura = new RouterContainer();
 $routes = $aura->getMap();
 $router = new AuraRouterAdapter($aura);
 
-$app->pipe(ProfilerMiddleware::class);
-$app->pipe(ErrorsCatcherMiddleware::class);
+$app->pipe(new ProfilerMiddleware());
+$app->pipe(new ErrorsCatcherMiddleware());
 $app->pipe(new RouterMiddleware($router, $resolver));
 
 // Routes
@@ -53,7 +51,7 @@ $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => 
 
 
 // Run
-$response = $app->run($request);
+$response = $app->handle($request);
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);

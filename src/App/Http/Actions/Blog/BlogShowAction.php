@@ -3,11 +3,14 @@
 namespace App\Http\Actions\Blog;
 
 use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class BlogShowAction
+class BlogShowAction implements RequestHandlerInterface
 {
-    public function __invoke(ServerRequestInterface $request): JsonResponse
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $postID = $request->getAttribute('id', 1);
         return new JsonResponse(
