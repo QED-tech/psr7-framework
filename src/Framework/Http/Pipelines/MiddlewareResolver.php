@@ -10,15 +10,9 @@ class MiddlewareResolver
 {
     public function resolve(mixed $handler): mixed
     {
-        if (is_array($handler)) {
-            return $this->createPipe($handler);
-        }
-
-        if (is_string($handler)) {
-            return $this->createHandler($handler);
-        }
-
-        return $handler;
+        return is_array($handler)
+            ? $this->createPipe($handler)
+            : $this->createHandler($handler);
     }
 
     private function createPipe(array $handlers): MiddlewarePipe
@@ -35,10 +29,10 @@ class MiddlewareResolver
         return is_string($action) ? $this->createMiddleware($action) : $action;
     }
 
-    private function createMiddleware($action): CallableMiddlewareDecorator
+    private function createMiddleware(string $action): CallableMiddlewareDecorator
     {
-        return middleware(function ($req, $handler) use ($action) {
-            return (new $action())->handle($req);
+        return middleware(function ($request) use ($action) {
+            return (new $action())->handle($request);
         });
     }
 }
