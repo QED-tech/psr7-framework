@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Http\Router\exception;
+namespace Framework\Http\Router\Exception;
 
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\ServerRequestInterface;

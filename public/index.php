@@ -8,11 +8,10 @@ use App\Http\Actions\NotFoundAction;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
-use Framework\Http\MiddlewareResolver;
+use Framework\Http\Pipelines\MiddlewareResolver;
 use Framework\Http\Pipelines\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
-use Framework\Http\Router\exception\RequestNotMatchedException;
-use Laminas\Diactoros\Response\JsonResponse;
+use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -23,7 +22,7 @@ require 'vendor/autoload.php';
 // Initialization
 
 $params = [
-    'users' => ['admin' => 'pass']
+	'users' => ['admin' => 'password']
 ];
 
 $middlewareResolver = new MiddlewareResolver();
@@ -36,28 +35,24 @@ $router = new AuraRouterAdapter($aura);
 // Routes
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
-$routes->get('cabinet', '/cabinet', function (ServerRequest $request) use ($params) {
-    
-    $pipeline = (new Pipeline())
-        ->pipe(new ProfilerMiddleware())
-        ->pipe(new AuthMiddleware($params['users']))
-        ->pipe(new CabinetAction());
-    
-    return $pipeline($request, new NotFoundAction());
-});
+$routes->get('cabinet', '/cabinet', [
+	ProfilerMiddleware::class,
+	new AuthMiddleware($params['users']),
+	CabinetAction::class
+]);
 $routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 
 // Run
 try {
-    $result = $router->match($request);
-    foreach ($result->getAttributes() as $attribute => $value) {
-        $request = $request->withAttribute($attribute, $value);
-    }
-    $action = $middlewareResolver->resolve($result->getHandler());
-    $response = $action($request);
+	$result = $router->match($request);
+	foreach ($result->getAttributes() as $attribute => $value) {
+		$request = $request->withAttribute($attribute, $value);
+	}
+	$action = $middlewareResolver->resolve($result->getHandler());
+	$response = $action($request);
 } catch (RequestNotMatchedException $e) {
-    $action = NotFoundAction::class;
-    $response = $action($request);
+	$action = new NotFoundAction();
+	$response = $action($request);
 }
 
 $emitter = new SapiEmitter();
