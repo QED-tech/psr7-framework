@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

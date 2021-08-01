@@ -6,8 +6,13 @@ use App\Http\Actions\CabinetAction;
 use App\Http\Actions\HomeAction;
 use App\Http\Middleware\AuthMiddleware;
 use Aura\Router\Map;
+use Aura\Router\RouterContainer;
+use Framework\Http\Router\AuraRouterAdapter;
 
-/** @var Map $routes */
+$aura = new RouterContainer();
+$routes = $aura->getMap();
+$router = new AuraRouterAdapter($aura);
+
 $routes->get('home', '/', HomeAction::class);
 $routes->get('about', '/about', AboutAction::class);
 /** @var array $params */

@@ -1,31 +1,27 @@
 <?php
 
-use Aura\Router\RouterContainer;
+use Framework\Application;
 use Framework\Http\Pipelines\MiddlewareResolver;
-use Framework\Http\Router\AuraRouterAdapter;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Laminas\Stratigility\MiddlewarePipe;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
 // Initialization
-$params = require 'config/params.php';
+$params = require 'config/config.php';
+$container = require 'config/container.php';
 
 $request = ServerRequestFactory::fromGlobals();
-$resolver = new MiddlewareResolver();
-$app = new MiddlewarePipe();
+$resolver = new MiddlewareResolver($container);
 
-$aura = new RouterContainer();
-$routes = $aura->getMap();
-$router = new AuraRouterAdapter($aura);
+$app = new Application($resolver);
 
-require 'config/pipeline.php';
 require 'config/routes.php';
+require 'config/pipeline.php';
 
 // Run
-$response = $app->handle($request);
+$response = $app->run($request);
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);
