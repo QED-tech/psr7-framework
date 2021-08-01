@@ -4,6 +4,7 @@ namespace Framework\Http\Pipelines;
 
 use Laminas\Stratigility\Middleware\CallableMiddlewareDecorator;
 use Laminas\Stratigility\MiddlewarePipe;
+use Psr\Http\Server\RequestHandlerInterface;
 use function Laminas\Stratigility\middleware;
 
 class MiddlewareResolver
@@ -32,7 +33,9 @@ class MiddlewareResolver
     private function createMiddleware(string $action): CallableMiddlewareDecorator
     {
         return middleware(function ($request) use ($action) {
-            return (new $action())->handle($request);
+            /** @var RequestHandlerInterface $handler */
+            $handler = new $action();
+            return $handler->handle($request);
         });
     }
 }
