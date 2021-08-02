@@ -36,4 +36,9 @@ class AuraRouterAdapter implements Router
             throw new RouteNotFoundException($name, $params, $e);
         }
     }
+
+    public function getAura(): RouterContainer
+    {
+        return $this->aura;
+    }
 }

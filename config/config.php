@@ -1,5 +1,7 @@
 <?php
 
 return [
-	'users' => ['admin' => 'password']
+	'users' => [
+		'admin' => 'password'
+	]
 ];

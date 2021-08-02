@@ -1,27 +1,22 @@
 <?php
 
 use Framework\Application;
-use Framework\Http\Pipelines\MiddlewareResolver;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\ServiceManager\ServiceManager;
 
-chdir(dirname(__DIR__));
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-// Initialization
-$params = require 'config/config.php';
-$container = require 'config/container.php';
+/** @var ServiceManager $container */
+$container = require __DIR__ . '/../config/container.php';
+$app = $container->get(Application::class);
 
-$request = ServerRequestFactory::fromGlobals();
-$resolver = new MiddlewareResolver($container);
+(require __DIR__ . '/../config/routes.php')($container);
+(require __DIR__ . '/../config/pipeline.php')($app);
 
-$app = new Application($resolver);
-
-require 'config/routes.php';
-require 'config/pipeline.php';
-
-// Run
-$response = $app->run($request);
+$response = $app->run(
+    ServerRequestFactory::fromGlobals()
+);
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);

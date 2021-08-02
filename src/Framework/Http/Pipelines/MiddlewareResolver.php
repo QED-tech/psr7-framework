@@ -11,13 +11,13 @@ use function Laminas\Stratigility\middleware;
 
 class MiddlewareResolver
 {
-	private ContainerInterface $container;
-	
-	public function __construct(ContainerInterface $container)
-	{
-		$this->container = $container;
-	}
-	
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     public function resolve(mixed $handler): mixed
     {
         return is_array($handler)
@@ -37,19 +37,18 @@ class MiddlewareResolver
     private function createHandler(mixed $action)
     {
         return is_string($action)
-	        ? $this->createMiddleware($action)
-	        : $action;
+            ? $this->createMiddleware($action)
+            : $action;
     }
 
     private function createMiddleware(string $action): MiddlewareInterface|RequestHandlerInterface
     {
-	    $actionName = $this->container->get($action);
-	    /** @var RequestHandlerInterface $handler */
-	    $handler = new $actionName();
-	    if ($handler instanceof MiddlewareInterface) {
-			return $handler;
-	    }
-    	
+        $handler = $this->container->get($action);
+
+        if ($handler instanceof MiddlewareInterface) {
+            return $handler;
+        }
+
         return middleware(function ($request) use ($handler) {
             return $handler->handle($request);
         });
