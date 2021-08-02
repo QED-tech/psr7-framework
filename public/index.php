@@ -9,6 +9,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 /** @var ServiceManager $container */
 $container = require __DIR__ . '/../config/container.php';
+/** @var Application $app */
 $app = $container->get(Application::class);
 
 (require __DIR__ . '/../config/routes.php')($container);
