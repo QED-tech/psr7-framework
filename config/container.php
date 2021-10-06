@@ -6,9 +6,13 @@ use Framework\Application;
 use Framework\Http\Pipelines\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
+use Framework\Template\TemplateRenderer;
+use Framework\Template\TwigRenderer;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerInterface;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
 
 $container = new ServiceManager([
 	'abstract_factories' => [
@@ -26,6 +30,26 @@ $container = new ServiceManager([
 		},
 		Application::class => function (ContainerInterface $container) {
 			return new Application($container->get(MiddlewareResolver::class));
+		},
+		TemplateRenderer::class => function (ContainerInterface $container) {
+			return new TwigRenderer($container->get(Environment::class), '.html.twig');
+		},
+		Environment::class => function (ContainerInterface $container) {
+			$loader = new Twig\Loader\FilesystemLoader();
+			$loader->addPath(__DIR__ . '/../templates/layout');
+			
+			$debug = $container->get('config')['debug'];
+			
+			$environment = new Environment($loader, [
+				'debug' => $debug,
+				'cache' => $debug ? false : __DIR__ . '/../var/cache/twig'
+			]);
+			
+			if ($debug) {
+				$environment->addExtension(new DebugExtension());
+			}
+			
+			return $environment;
 		}
 	]
 ]);

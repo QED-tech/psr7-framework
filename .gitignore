@@ -2,3 +2,4 @@
 /.idea/
 /phpunit.xml.dist.bak
 /.phpunit.result.cache
+/var/*
