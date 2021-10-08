@@ -10,16 +10,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class HomeAction implements RequestHandlerInterface
 {
-	private TemplateRenderer $renderer;
-	
-	public function __construct(TemplateRenderer $renderer)
-	{
-		$this->renderer = $renderer;
-	}
-	
+    private TemplateRenderer $renderer;
+
+    public function __construct(TemplateRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-		$html = $this->renderer->render('app/home');
+        $html = $this->renderer->render('app/home');
         return (new HtmlResponse($html))
             ->withHeader('X-Developer', 'QED-tech');
     }

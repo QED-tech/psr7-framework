@@ -10,13 +10,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AboutAction implements RequestHandlerInterface
 {
-	
-	private TemplateRenderer $renderer;
-	
-	public function __construct(TemplateRenderer $renderer)
-	{
-		$this->renderer = $renderer;
-	}
+    private TemplateRenderer $renderer;
+
+    public function __construct(TemplateRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
