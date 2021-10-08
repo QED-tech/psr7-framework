@@ -22,6 +22,6 @@ class ErrorResponseGenerator
 			'error' => $e->getMessage(),
 			'code' => $e->getCode()
 		]);
-		return new HtmlResponse($view);
+		return new HtmlResponse($view, $e->getCode());
 	}
 }
