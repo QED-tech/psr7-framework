@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Actions\AboutAction;
+use App\Http\Actions\Blog\BlogAction;
 use App\Http\Actions\Blog\BlogShowAction;
 use App\Http\Actions\CabinetAction;
 use App\Http\Actions\HomeAction;
@@ -23,5 +24,6 @@ return static function (ContainerInterface $container) {
 		AuthMiddleware::class,
 		CabinetAction::class
 	]);
+	$routes->get('blog', '/blog', BlogAction::class);
 	$routes->get('blog.show', '/blog/{id}', BlogShowAction::class)->tokens(['id' => '\d+']);
 };

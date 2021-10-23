@@ -9,19 +9,20 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ErrorResponseGenerator
 {
-	private TemplateRenderer $renderer;
-	
-	public function __construct(TemplateRenderer $renderer)
-	{
-		$this->renderer = $renderer;
-	}
-	
-	public function generate(ServerRequestInterface $request, \Throwable $e): ResponseInterface
-	{
-		$view = $this->renderer->render('errors/error', [
-			'error' => $e->getMessage(),
-			'code' => $e->getCode()
-		]);
-		return new HtmlResponse($view, $e->getCode());
-	}
+    private TemplateRenderer $renderer;
+
+    public function __construct(TemplateRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
+    public function generate(ServerRequestInterface $request, \Throwable $e): ResponseInterface
+    {
+        $view = $this->renderer->render('errors/error', [
+            'error' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'request' => $request
+        ]);
+        return new HtmlResponse($view, $e->getCode());
+    }
 }

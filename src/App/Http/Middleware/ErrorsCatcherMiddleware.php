@@ -10,11 +10,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class ErrorsCatcherMiddleware implements MiddlewareInterface
 {
-	private ErrorResponseGenerator $responseGenerator;
-	
-	public function __construct(ErrorResponseGenerator $generator)
+    private ErrorResponseGenerator $responseGenerator;
+
+    public function __construct(ErrorResponseGenerator $generator)
     {
-		$this->responseGenerator = $generator;
+        $this->responseGenerator = $generator;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -22,7 +22,7 @@ class ErrorsCatcherMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (\Throwable $e) {
-           return $this->responseGenerator->generate($request, $e);
+            return $this->responseGenerator->generate($request, $e);
         }
     }
 }

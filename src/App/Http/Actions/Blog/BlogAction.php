@@ -6,11 +6,9 @@ use Framework\Template\TemplateRenderer;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class BlogShowAction implements RequestHandlerInterface
+class BlogAction
 {
-
     private TemplateRenderer $renderer;
 
     public function __construct(TemplateRenderer $renderer)
