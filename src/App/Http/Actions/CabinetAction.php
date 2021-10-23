@@ -2,21 +2,29 @@
 
 namespace App\Http\Actions;
 
+use Framework\Template\TemplateRenderer;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class CabinetAction implements RequestHandlerInterface
 {
+    private TemplateRenderer $renderer;
+
+    public function __construct(TemplateRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $username = $request->getAttribute('username');
         return new HtmlResponse(
-            sprintf(
-                'Cabinet action for user - %s',
-                $username
+            $this->renderer->render(
+                'app/cabinet',
+                [
+                'username' => $request->getAttribute('username')
+                ]
             )
         );
     }
