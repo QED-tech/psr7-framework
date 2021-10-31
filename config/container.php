@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AuthMiddleware;
 use Aura\Router\RouterContainer;
+use Doctrine\ORM\EntityManagerInterface;
 use Framework\Application;
 use Framework\Http\Pipelines\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -53,7 +54,7 @@ $container = new ServiceManager([
 			
 			return $environment;
 		},
-		\Doctrine\ORM\EntityManagerInterface::class => EntityManagerFactory::class,
+		EntityManagerInterface::class => EntityManagerFactory::class,
 		PDO::class => PDOFactory::class,
 	]
 ]);
