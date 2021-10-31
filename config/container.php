@@ -55,7 +55,6 @@ $container = new ServiceManager([
 			return $environment;
 		},
 		EntityManagerInterface::class => EntityManagerFactory::class,
-		PDO::class => PDOFactory::class,
 	]
 ]);
 
