@@ -7,6 +7,7 @@ use Framework\Application;
 use Framework\Http\Pipelines\MiddlewareResolver;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
+use Framework\Template\Extension\RouteExtension;
 use Framework\Template\TemplateRenderer;
 use Framework\Template\TwigRenderer;
 use Infrastructure\EntityManagerFactory;

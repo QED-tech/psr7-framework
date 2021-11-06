@@ -2,6 +2,7 @@
 
 namespace Infrastructure;
 
+use Framework\Template\Extension\RouteExtension;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -24,7 +25,7 @@ class TwigEnvironmentFactory
         if ($debug) {
             $environment->addExtension(new DebugExtension());
         }
-
+		$environment->addExtension($container->get(RouteExtension::class));
         return $environment;
     }
 }

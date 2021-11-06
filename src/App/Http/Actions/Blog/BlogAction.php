@@ -21,11 +21,13 @@ class BlogAction
 	
 	public function handle(): ResponseInterface
 	{
-		$postsRepository = $this->em->getRepository(Post::class);
 		return new HtmlResponse($this->renderer->render(
 			'app/blog/blog',
 			[
-				'posts' => $postsRepository->findBy([], null, 15)
+				'posts' => $this
+					->em
+					->getRepository(Post::class)
+					->findBy([], null, 15)
 			]
 		));
 	}
