@@ -25,7 +25,7 @@ class TwigEnvironmentFactory
         if ($debug) {
             $environment->addExtension(new DebugExtension());
         }
-		$environment->addExtension($container->get(RouteExtension::class));
+        $environment->addExtension($container->get(RouteExtension::class));
         return $environment;
     }
 }

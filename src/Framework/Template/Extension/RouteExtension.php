@@ -8,22 +8,22 @@ use Twig\TwigFunction;
 
 class RouteExtension extends AbstractExtension
 {
-	private Router $router;
-	
-	public function __construct(Router $router)
-	{
-		$this->router = $router;
-	}
-	
-	public function getFunctions(): array
-	{
-		return [
-			new TwigFunction('path', [$this, 'generatePath']),
-		];
-	}
-	
-	public function generatePath($name, array $params = []): string
-	{
-		return $this->router->generate($name, $params);
-	}
+    private Router $router;
+
+    public function __construct(Router $router)
+    {
+        $this->router = $router;
+    }
+
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('path', [$this, 'generatePath']),
+        ];
+    }
+
+    public function generatePath($name, array $params = []): string
+    {
+        return $this->router->generate($name, $params);
+    }
 }
