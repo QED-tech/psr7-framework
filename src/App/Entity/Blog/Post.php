@@ -45,7 +45,7 @@ class Post
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", orphanRemoval=true, cascade={"persist"})
      * @ORM\OrderBy({"date" = "ASC"})
      */
-    private array|ArrayCollection $comments;
+    private $comments;
 
     #[Pure] public function __construct(\DateTimeImmutable $date, string $title, Content $content, Meta $meta)
     {

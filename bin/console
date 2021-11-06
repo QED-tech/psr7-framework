@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use Console\Command\FixtureCommand;
 use Doctrine\Migrations\Configuration\Configuration;
 use Doctrine\Migrations\Configuration\Connection\ExistingConnection;
 use Doctrine\Migrations\Configuration\Migration\ExistingConfiguration;
@@ -52,5 +53,5 @@ $commands = $container->get('config')['console']['commands'];
 foreach ($commands as $command) {
 	$cli->add($container->get($command));
 }
-
+$cli->add(new FixtureCommand($container, ROOT . 'db/fixtures/'));
 $cli->run();
