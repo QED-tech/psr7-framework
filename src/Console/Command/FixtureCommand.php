@@ -46,6 +46,6 @@ class FixtureCommand extends Command
         $executor->execute($loader->getFixtures());
 
         $output->writeln('<info>Done!</info>');
-		return 0;
+        return 0;
     }
 }

@@ -2,28 +2,31 @@
 
 namespace App\Http\Actions\Blog;
 
+use App\Entity\Blog\Post;
+use Doctrine\ORM\EntityManagerInterface;
 use Framework\Template\TemplateRenderer;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class BlogAction
 {
-    private TemplateRenderer $renderer;
-
-    public function __construct(TemplateRenderer $renderer)
-    {
-        $this->renderer = $renderer;
-    }
-
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $postID = $request->getAttribute('id', 1);
-        return new HtmlResponse($this->renderer->render(
-            'app/blog/show',
-            [
-                'post' => sprintf('lorem ipsum id - %d', $postID)
-            ]
-        ));
-    }
+	private TemplateRenderer $renderer;
+	private EntityManagerInterface $em;
+	
+	public function __construct(TemplateRenderer $renderer, EntityManagerInterface $em)
+	{
+		$this->renderer = $renderer;
+		$this->em = $em;
+	}
+	
+	public function handle(): ResponseInterface
+	{
+		$postsRepository = $this->em->getRepository(Post::class);
+		return new HtmlResponse($this->renderer->render(
+			'app/blog/blog',
+			[
+				'posts' => $postsRepository->findBy([], null, 15)
+			]
+		));
+	}
 }
