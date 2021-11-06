@@ -11,11 +11,13 @@ use Framework\Template\TemplateRenderer;
 use Framework\Template\TwigRenderer;
 use Infrastructure\EntityManagerFactory;
 use Infrastructure\PDOFactory;
+use Infrastructure\TwigEnvironmentFactory;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
-use Twig\Extension\DebugExtension;
+
+const ROOT = __DIR__ . '/../';
 
 $container = new ServiceManager([
 	'abstract_factories' => [
@@ -37,23 +39,7 @@ $container = new ServiceManager([
 		TemplateRenderer::class => function (ContainerInterface $container) {
 			return new TwigRenderer($container->get(Environment::class), '.html.twig');
 		},
-		Environment::class => function (ContainerInterface $container) {
-			$loader = new Twig\Loader\FilesystemLoader();
-			$loader->addPath(__DIR__ . '/../templates/layout');
-			
-			$debug = $container->get('config')['debug'];
-			
-			$environment = new Environment($loader, [
-				'debug' => $debug,
-				'cache' => $debug ? false : __DIR__ . '/../var/cache/twig'
-			]);
-			
-			if ($debug) {
-				$environment->addExtension(new DebugExtension());
-			}
-			
-			return $environment;
-		},
+		Environment::class => TwigEnvironmentFactory::class,
 		PDO::class => PDOFactory::class,
 		EntityManagerInterface::class => EntityManagerFactory::class,
 	]
