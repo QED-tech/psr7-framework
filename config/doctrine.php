@@ -1,16 +1,22 @@
 <?php
 
-use Doctrine\DBAL\Driver\PDO\SQLite\Driver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
-use Infrastructure\PDOFactory;
 
 return [
 	'doctrine' => [
 		'connection' => [
 			'orm_default' => [
-				'pdo' => PDOFactory::class,
-				'driver_class' => Driver::class
+				'pdo' => PDO::class,
+				'driver_class' => Doctrine\DBAL\Driver\PDO\SQLite\Driver::class
 			]
+		],
+		'configuration' => [
+			'orm_default' => [
+				'result_cache' => 'filesystem',
+				'metadata_cache' => 'filesystem',
+				'query_cache' => 'filesystem',
+				'hydration_cache' => 'filesystem',
+			],
 		],
 		'driver' => [
 			'orm_default' => [

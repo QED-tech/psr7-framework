@@ -1,12 +1,8 @@
 <?php
 
 return [
-	'pdo' => [
-		'options' => [
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-		],
-		'dsn' => 'sqlite:db/db.sqlite',
-		'username' => '',
-		'password' => '',
+	'sqlite' => [
+		'driver' => 'pdo_sqlite',
+		'path' => __DIR__ . '/../db/db.sqlite',
 	],
 ];

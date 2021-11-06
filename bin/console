@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+
+use Doctrine\Migrations\Configuration\Configuration;
+use Doctrine\Migrations\Configuration\Connection\ExistingConnection;
+use Doctrine\Migrations\Configuration\Migration\ExistingConfiguration;
+use Doctrine\Migrations\DependencyFactory;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Application;
+use Doctrine\Migrations\Tools\Console\Command;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+/**
+ * @var ContainerInterface $container
+ */
+$container = require __DIR__ . '/../config/container.php';
+
+$cli = new Application('Application console');
+
+/** @var EntityManagerInterface $entityManager */
+$entityManager = $container->get(EntityManagerInterface::class);
+
+$cli->getHelperSet()->set(new EntityManagerHelper($entityManager), 'entityManager');
+
+$connection = $entityManager->getConnection();
+$configuration = new Configuration();
+$configuration->addMigrationsDirectory('App\Migrations', __DIR__ . '/../src/App/Migrations');
+
+$dependencyFactory = DependencyFactory::fromConnection(
+	new ExistingConfiguration($configuration),
+	new ExistingConnection($connection)
+);
+
+$cli->addCommands([
+	new Command\DumpSchemaCommand($dependencyFactory),
+	new Command\ExecuteCommand($dependencyFactory),
+	new Command\GenerateCommand($dependencyFactory),
+	new Command\LatestCommand($dependencyFactory),
+	new Command\ListCommand($dependencyFactory),
+	new Command\MigrateCommand($dependencyFactory),
+	new Command\RollupCommand($dependencyFactory),
+	new Command\StatusCommand($dependencyFactory),
+	new Command\SyncMetadataCommand($dependencyFactory),
+	new Command\VersionCommand($dependencyFactory),
+]);
+
+Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($cli);
+
+$commands = $container->get('config')['console']['commands'];
+foreach ($commands as $command) {
+	$cli->add($container->get($command));
+}
+
+$cli->run();

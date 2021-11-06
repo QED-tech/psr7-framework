@@ -9,11 +9,11 @@ use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Router;
 use Framework\Template\TemplateRenderer;
 use Framework\Template\TwigRenderer;
+use Infrastructure\EntityManagerFactory;
 use Infrastructure\PDOFactory;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerInterface;
-use Roave\PsrContainerDoctrine\EntityManagerFactory;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 
@@ -54,6 +54,7 @@ $container = new ServiceManager([
 			
 			return $environment;
 		},
+		PDO::class => PDOFactory::class,
 		EntityManagerInterface::class => EntityManagerFactory::class,
 	]
 ]);

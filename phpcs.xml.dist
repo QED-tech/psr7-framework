@@ -17,5 +17,6 @@
 
     <!-- Paths to check -->
     <file>src</file>
+    <file>bin</file>
     <file>public</file>
 </ruleset>
