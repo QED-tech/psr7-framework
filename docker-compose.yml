@@ -1,2 +1,27 @@
-version:  "3"
+version: "3"
 
+services:
+  php-fpm:
+    build:
+      context:
+        docker
+      dockerfile:
+        php-fpm/Dockerfile
+    volumes:
+      - ./:/app
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: docker
+      dockerfile:
+        nginx/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

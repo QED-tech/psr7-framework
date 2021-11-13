@@ -8,3 +8,15 @@ lint:
 
 lint-fix:
 	composer cs-fix
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
+docker-build:
+	docker-compose build
+
+down-clear:
+	docker-compose down -v --remove-orphans
